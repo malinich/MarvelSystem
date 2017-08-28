@@ -1,0 +1,18 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ comix.name }}</title>
+        <link rel="icon" type="image/png" href="{% static 'favicon.ico' %}" />
+    </head>
+    <body>
+    <div align="middle">
+        <image height="400" src="{{ comix.cover.url }}"></image><br>
+        <br><br><h3>{{ comix.name }}</h3><br><br>
+        <div align="left">{{ comix.description }}</div><br><br>
+        EAN: {{ comix.ean }}<br><br>
+        Tags: <br>{% for tag in tags %}{{ tag }}<br>{% endfor %}<br>
+    </div>
+    </body>
+</html>

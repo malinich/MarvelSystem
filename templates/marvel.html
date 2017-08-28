@@ -1,0 +1,52 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en" ng-app="SearchModel">
+    <head>
+    <meta charset="UTF-8">
+        <link rel="icon" type="image/png" href="{% static 'favicon.ico' %}" />
+        <link rel="stylesheet" href="{% static 'style.css' %}" />
+        <script type="text/javascript" src="{% static 'lib/angular.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'SearchController.js' %}"></script>
+        <title>Поиск комиксов</title>
+    </head>
+    <body ng-controller="SearchCtrl">
+    <div class="searchform">
+        <form enctype="multipart/form-data" method="post" ng-submit="OnSubmit()" align="middle" >
+            {% csrf_token %}
+            <label>Ключевые слова или тег: </label><input type="text" maxlength="100" ng-model="keywords" id="keywords" >
+            <label>Год: </label><select ng-model="selectedItem" ng-options="item.name for item in items"></select>
+            <input type="submit" value="Найти">
+        </form>
+    </div>
+    <div ng-repeat="object in Comixes track by $index" class="results" align="middle">
+        <table>
+            <tr>
+                <td>
+                    <img height="150" src="{[{ object.cover }]}">
+                </td>
+                <td width="800">
+                    <a href="/marvel/{[{object.ean}]}">{[{ object.name }]}</a><br>
+                    {[{ object.description }]}
+                    <table>
+                        <tr>
+                            <td width="200">
+                                Теги:
+                                <div ng-repeat="tag in object.tags track by $index">
+                                    <a href ng-click="OnTagsClick(tag)">{[{ tags[tag-1].name }]}</a>
+                                </div>
+                            </td>
+                            <td width="600" align="right">
+                                Дата выхода: {[{ object.date }]}
+                                <br>
+                                {{ if user. }}
+                                <a href ng-click="AddItem()">Добавить</a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    </body>
+</html>
