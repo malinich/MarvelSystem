@@ -21,10 +21,13 @@ class Comix(models.Model):
 
 
     def getShortDesc(self):
-        i=500
-        while str(self.description)[i]!=" ":
-            i=i+1
-        return str(self.description)[:i]+"..."
+        if str(self.description).__len__()>350:
+            i=350
+            while str(self.description)[i]!=" ":
+                i=i+1
+            return str(self.description)[:i]+"..."
+        else:
+            return str(self.description)
 
     def getYear(self):
         return self.date.year.numerator;
@@ -33,11 +36,12 @@ class Comix(models.Model):
         return self.name;
 
 
-class Customer(User):
+class Customer(models.Model):
+    user=models.OneToOneField(to=User)
     comixlist=models.ManyToManyField(to=Comix)
 
     def __str__(self):
-        return self.USERNAME_FIELD
+        return self.user.username.__str__()
 
 
 class ComixSerializer(serializers.ModelSerializer):

@@ -48,6 +48,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
+LOGIN_REDIRECT_URL = 'marvel'
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

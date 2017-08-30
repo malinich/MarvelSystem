@@ -12,11 +12,20 @@
     </head>
     <body ng-controller="SearchCtrl">
     <div class="searchform">
-        <form enctype="multipart/form-data" method="post" ng-submit="OnSubmit()" align="middle" >
+        <h4 align="right">
+            {% if user.is_authenticated %}
+                <a href="/logout">Выйти из аккаунта</a>
+            {% else %}
+                <a href="/auth">Войти в аккаунт</a>
+            {% endif %}
+        </h4>
+        <br>
+        <form enctype="multipart/form-data" method="post" ng-submit="OnSubmit()" align="middle">
             {% csrf_token %}
             <label>Ключевые слова или тег: </label><input type="text" maxlength="100" ng-model="keywords" id="keywords" >
             <label>Год: </label><select ng-model="selectedItem" ng-options="item.name for item in items"></select>
             <input type="submit" value="Найти">
+            <button type="button" ng-click="Reset()">Сброс</button>
         </form>
     </div>
     <div ng-repeat="object in Comixes track by $index" class="results" align="middle">
@@ -39,8 +48,11 @@
                             <td width="600" align="right">
                                 Дата выхода: {[{ object.date }]}
                                 <br>
-                                {{ if user. }}
-                                <a href ng-click="AddItem()">Добавить</a>
+                                {% if user.is_authenticated %}
+                                    <a href ng-click="AddItem()">Добавить</a>
+                                    {% else %}
+                                    <a href="/auth/">Добавить</a>
+                                {% endif %}
                             </td>
                         </tr>
                     </table>

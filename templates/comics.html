@@ -1,0 +1,43 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{% static 'favicon.ico' %}" />
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <title>
+        {{ user.username }} - Список комиксов
+    </title>
+</head>
+    <body>
+    <div class="searchform">
+            <h1 align="middle">Список комиксов - {{ user.username }}</h1>
+            {% for single_comics in comics %}
+                <table>
+                    <tr>
+                        <td>
+                            <img height="150" src="{{ single_comics.cover.url }}">
+                        </td>
+                        <td width="800">
+                            <a href="/marvel/{{ single_comics.ean}}">{{ single_comics.name }}</a><br>
+                            {{ single_comics.getShortDesc }}
+                            <table>
+                                <tr>
+                                    <td width="200">
+                                        Теги:
+
+                                    </td>
+                                    <td width="600" align="right">
+                                        Дата выхода: {{ single_comics.date }}
+                                        <br>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            {% endfor %}
+    </div>
+    </body>
+</html>

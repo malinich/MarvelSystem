@@ -49,6 +49,11 @@ SearchModel.controller('SearchCtrl',function ($scope, $http) {
         }
     });
 
+    $scope.Reset=function () {
+        $scope.keywords="";
+        $scope.selectedItem=$scope.items[0];
+    }
+
     $scope.OnTagsClick=function (tag) {
         $scope.keywords=$scope.tags[tag-1].name;
         $scope.OnSubmit();
