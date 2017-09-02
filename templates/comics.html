@@ -13,7 +13,7 @@
     <body>
     <div align="middle"><h4>
         <a href="{% url 'marvel' %}">Поиск</a> -
-        {% if user.is_authenticated %}<a href="{% url 'master' %}">Комиксы {{ user.username }}</a> -
+        {% if authuser.is_authenticated %}<a href="{% url 'master' %}">Комиксы {{ authuser.username }}</a> -
         <a href="/logout/">Выйти из аккаунта</a>{% else %}
           <a href="/auth/">Войти в аккаунт</a>
         {% endif %}

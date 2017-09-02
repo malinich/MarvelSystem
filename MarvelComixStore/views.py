@@ -45,7 +45,7 @@ class Comics(DetailView):
         customer = models.Customer.objects.get(user=user)
         comics=models.Comix.objects.filter(customer=customer)
 
-        context={ 'user':user, 'comics':comics}
+        context={ 'user':user, 'comics':comics,'authuser':request.user}
         return render(request, 'comics.html', context)
 
 class Master(DetailView):
