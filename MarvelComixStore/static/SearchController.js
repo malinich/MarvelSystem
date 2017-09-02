@@ -1,4 +1,4 @@
-var SearchModel = angular.module("SearchModel",[])
+var SearchModel = angular.module("SearchModel",[]);
 
 SearchModel.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
@@ -23,6 +23,17 @@ SearchModel.controller('SearchCtrl',function ($scope, $http) {
     $scope.keywords="";
 
     $scope.tags=[];
+    
+    $scope.added=[];
+    
+    $scope.check_comics=function(object){
+        for(i=0;i<$scope.added.length;i++) {
+            if (object.ean.toString() == $scope.added[i]) {
+                return false;
+            }
+        }
+        return true;
+    };
 
     var jsons;
 
@@ -52,14 +63,37 @@ SearchModel.controller('SearchCtrl',function ($scope, $http) {
     $scope.Reset=function () {
         $scope.keywords="";
         $scope.selectedItem=$scope.items[0];
-    }
+    };
 
     $scope.OnTagsClick=function (tag) {
         $scope.keywords=$scope.tags[tag-1].name;
         $scope.OnSubmit();
     };
 
+    var getAdded=function () {
+
+        $http({method:'GET',url:'get_added'}).then(function (response) {
+            $scope.added=response.data.toString().split('\n');
+            console.log($scope.added)
+        });
+    };
+
+    $scope.AddItem=function (ean) {
+        $http( {method: 'GET', url: 'add/'+ean.toString()}).then(function (response) {
+            getAdded();
+        })
+    };
+
+
+    $scope.DeleteItem=function (ean) {
+        $http( {method: 'GET', url: 'delete/'+ean.toString()}).then(function (response) {
+            getAdded();
+        })
+    };
+
     $scope.OnSubmit=function () {
+        getAdded();
+        
         $scope.Comixes=[];
 
         $scope.formModel.append('keywords',$scope.keywords);
@@ -77,9 +111,10 @@ SearchModel.controller('SearchCtrl',function ($scope, $http) {
             for(i=0;i<jsons.length-1;i++){
                 var comix = angular.fromJson(jsons[i])
                 comix.description=comix.description.toString().slice(0,350)+"...";
+                //comix.append('added',);
                 $scope.Comixes.push(comix);
-                console.log($scope.Comixes);
             }
+            console.log($scope.Comixes);
 
         });
         $scope.formModel=new FormData();
