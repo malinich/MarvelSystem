@@ -4,7 +4,6 @@ from django.views.generic import DetailView
 from MarvelComixStore import forms,models
 from django.db.models import Q
 from rest_framework.renderers import JSONRenderer
-from django.core.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
@@ -52,11 +51,13 @@ class Master(DetailView):
     def get(self,request,*args,**kwargs):
         #comixes=models.Comix.objects.all()
         #comixes.filter(cus)
-        customer = models.Customer.objects.get(user=request.user)
-        comics=models.Comix.objects.filter(customer=customer)
+        if request.user.is_authenticated():
+            customer = models.Customer.objects.get(user=request.user)
+            comics=models.Comix.objects.filter(customer=customer)
 
-        context={ 'user':request.user, 'comics':comics}
-        return render(request, 'comics.html', context)
+            context={ 'user':request.user, 'comics':comics}
+            return render(request, 'comics.html', context)
+        return HttpResponseRedirect(redirect_to='/auth')
 
 
 class get_years(DetailView):
@@ -103,6 +104,8 @@ def get_added(request):
     return HttpResponse(added[:-1])
 
 def add(request,*args,**kwargs):
+    if not request.user.is_authenticated():
+        return HttpResponse('Not authenticated')
     user=request.user
     ean=kwargs['ean']
     customer=models.Customer.objects.get(user=user)
@@ -110,6 +113,8 @@ def add(request,*args,**kwargs):
     return HttpResponse('Added!')
 
 def delete(request,*args,**kwargs):
+    if not request.user.is_authenticated():
+        return HttpResponse('Not authenticated')
     user=request.user
     ean=kwargs['ean']
     customer=models.Customer.objects.get(user=user)
